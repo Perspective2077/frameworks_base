@@ -168,21 +168,13 @@ fun MaterialVerticalVolumeSlider(
         view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
     }
 
-    val fillColor by animateColorAsState(
-        targetValue = when (ringerMode) {
-            AudioManager.RINGER_MODE_SILENT -> MaterialTheme.colorScheme.tertiaryContainer
-            AudioManager.RINGER_MODE_VIBRATE -> MaterialTheme.colorScheme.tertiaryContainer
-            else -> MaterialTheme.colorScheme.primary
-        },
+   val fillColor by animateColorAsState(
+        targetValue = MaterialTheme.colorScheme.primary,
         animationSpec = tween(350),
         label = "VolumeFill",
     )
     val iconTint by animateColorAsState(
-        targetValue = when (ringerMode) {
-            AudioManager.RINGER_MODE_SILENT -> MaterialTheme.colorScheme.onTertiaryContainer
-            AudioManager.RINGER_MODE_VIBRATE -> MaterialTheme.colorScheme.onTertiaryContainer
-            else -> MaterialTheme.colorScheme.onPrimary
-        },
+        targetValue = MaterialTheme.colorScheme.onPrimary,
         animationSpec = tween(350),
         label = "VolumeIconTint",
     )
@@ -196,18 +188,11 @@ fun MaterialVerticalVolumeSlider(
             MaterialTheme.colorScheme.secondary,
         )
     }
-    val vibrateGradientColors = listOf(
-        MaterialTheme.colorScheme.tertiary,
-        MaterialTheme.colorScheme.tertiaryContainer,
-    )
-    val fillBrush: Brush? = when {
-        !gradientEnabled -> null
-        ringerMode == AudioManager.RINGER_MODE_NORMAL ->
-            Brush.verticalGradient(colors = normalGradientColors.reversed())
-        ringerMode == AudioManager.RINGER_MODE_VIBRATE ->
-            Brush.verticalGradient(colors = vibrateGradientColors.reversed())
-        else -> null
-    }
+
+    // Always use normal gradient regardless of ringerMode
+    val fillBrush: Brush? = if (gradientEnabled) {
+        Brush.verticalGradient(colors = normalGradientColors.reversed())
+    } else null
 
     val iconRes = when (ringerMode) {
         AudioManager.RINGER_MODE_SILENT -> R.drawable.ic_volume_off
